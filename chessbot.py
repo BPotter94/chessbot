@@ -17,9 +17,36 @@ class ChessGame:
         self.en_passant = None
         self.castling_rights = None
 
+    def replace_chars(self, board_str: str) -> str:
+        """Replaces the default characters in a board object's string output with
+        Unicode chess characters, e.g., '♖' instead of 'R.'
+        Parameters:
+            - board_str: The string from the board object.
+        Returns: The string with the replaced characters.
+        """
+        replaced_str = board_str
+
+        replaced_str = replaced_str.replace("P", "♙")
+        replaced_str = replaced_str.replace("N", "♘")
+        replaced_str = replaced_str.replace("B", "♗")
+        replaced_str = replaced_str.replace("R", "♖")
+        replaced_str = replaced_str.replace("Q", "♕")
+        replaced_str = replaced_str.replace("K", "♔")
+
+        replaced_str = replaced_str.replace("p", "♟")
+        replaced_str = replaced_str.replace("n", "♞")
+        replaced_str = replaced_str.replace("b", "♝")
+        replaced_str = replaced_str.replace("r", "♜")
+        replaced_str = replaced_str.replace("q", "♛")
+        replaced_str = replaced_str.replace("k", "♚")
+
+        replaced_str = replaced_str.replace(".", "·")
+
+        return replaced_str
+
     def display_board(self):
         for row in self.board:
-            print(" ".join(row))
+            print(self.replace_chars(" ".join(row)))
         print("")
 
     def make_move(self, move):
