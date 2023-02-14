@@ -226,14 +226,14 @@ class ChessGame:
                 print("White to move:")
                 self.display_board()
                 move = self.get_best_move()
-                # print("White moves", move)
-                # self.make_move(move)
+                print("White moves", move)
+                self.make_move(move)
             else:
                 print("Black to move:")
                 self.display_board()
                 move = self.get_best_move()
-                # print("Black moves", move)
-                # self.make_move(move)
+                print("Black moves", move)
+                self.make_move(move)
 
 
 if __name__ == "__main__":
