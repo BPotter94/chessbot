@@ -13,6 +13,9 @@ class ChessGame:
                       ["r", "n", "b", "q", "k", "b", "n", "r"]
                       ]
         self.white_to_move = True
+        self.moves = []
+        self.en_passant = None
+        self.castling_rights = None
 
     def display_board(self):
         for row in self.board:
@@ -20,9 +23,12 @@ class ChessGame:
         print("")
 
     def make_move(self, move):
-        self.board[move[0][1]][move[0][0]] = "."
-        self.board[move[1][1]][move[1][0]] = move[2]
-        self.white_to_move = not self.white_to_move
+        piece = self.board[move[0][1]][move[0][0]]
+        captured_piece = self.board[move[1][1]][move[1][0]]
+        en_passant = self.en_passant
+        castling_rights = self.castling_rights
+        self.moves.append((move, piece, captured_piece,
+                          en_passant, castling_rights))
 
     def get_possible_moves(self):
         moves = []
@@ -145,11 +151,14 @@ class ChessGame:
                             moves.append([(j, i), (j + x, i + y), piece])
         return moves
 
-    # This looks to be a duplicate function
-    # def make_move(self, move):
-    #     self.board[move[1][1]][move[1][0]] = self.board[move[0][1]][move[0][0]]
-    #     self.board[move[0][1]][move[0][0]] = "."
-    #     self.white_to_move = not self.white_to_move
+    def undo_move(self, move):
+        last_move = self.moves.pop()
+        move, piece, captured_piece, en_passant, castling_rights = last_move
+        self.board[move[0][1]][move[0][0]] = piece
+        self.board[move[1][1]][move[1][0]] = captured_piece
+        self.white_to_move = not self.white_to_move
+        self.en_passant = en_passant
+        self.castling_rights = castling_rights
 
     def evaluate_board(self):
         value = 0
@@ -183,7 +192,7 @@ class ChessGame:
             for move in possible_moves:
                 self.make_move(move)
                 value = max(value, self.minimax(depth - 1, False, alpha, beta))
-                # self.undo_move()
+                self.undo_move(move)
                 alpha = max(alpha, value)
                 if alpha >= beta:
                     break
@@ -193,7 +202,7 @@ class ChessGame:
             for move in possible_moves:
                 self.make_move(move)
                 value = min(value, self.minimax(depth - 1, True, alpha, beta))
-                # self.undo_move()
+                self.undo_move(move)
                 beta = min(beta, value)
                 if beta <= alpha:
                     break
