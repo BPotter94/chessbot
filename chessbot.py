@@ -172,26 +172,32 @@ class ChessGame:
                         value -= piece_values[piece.upper()]
         return value
 
-    # def minimax(self, depth, maximizing_player):
-    #     # if depth == 0:
-    #     #     return self.evaluate_board()
+    def minimax(self, depth, maximizing_player, alpha=-math.inf, beta=math.inf):
+        if depth == 0:
+            return self.evaluate_board()
 
-    #     if maximizing_player:
-    #         best_value = -math.inf
-    #         for move in self.get_possible_moves():
-    #             self.make_move(move)
-    #             value = self.minimax(depth - 1, False)
-    #             # self.undo_move(move)
-    #             best_value = max(best_value, value)
-    #         return best_value
-    #     else:
-    #         best_value = math.inf
-    #         for move in self.get_possible_moves():
-    #             self.make_move(move)
-    #             value = self.minimax(depth - 1, True)
-    #             # self.undo_move(move)
-    #             best_value = min(best_value, value)
-    #         return best_value
+        possible_moves = self.get_possible_moves()
+
+        if maximizing_player:
+            value = -math.inf
+            for move in possible_moves:
+                self.make_move(move)
+                value = max(value, self.minimax(depth - 1, False, alpha, beta))
+                # self.undo_move()
+                alpha = max(alpha, value)
+                if alpha >= beta:
+                    break
+            return value
+        else:
+            value = math.inf
+            for move in possible_moves:
+                self.make_move(move)
+                value = min(value, self.minimax(depth - 1, True, alpha, beta))
+                # self.undo_move()
+                beta = min(beta, value)
+                if beta <= alpha:
+                    break
+            return value
 
     def get_best_move(self):
         best_value = math.inf
